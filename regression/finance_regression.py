@@ -22,6 +22,7 @@ dictionary = pickle.load( open("../final_project/final_project_dataset_modified.
 ### list the features you want to look at--first item in the 
 ### list will be the "target" feature
 features_list = ["bonus", "salary"]
+#features_list = ["bonus", "long_term_incentive"]
 data = featureFormat( dictionary, features_list, remove_any_zeroes=True)
 target, features = targetFeatureSplit( data )
 
@@ -29,7 +30,7 @@ target, features = targetFeatureSplit( data )
 from sklearn.cross_validation import train_test_split
 feature_train, feature_test, target_train, target_test = train_test_split(features, target, test_size=0.5, random_state=42)
 train_color = "b"
-test_color = "b"
+test_color = "r"
 
 
 
@@ -37,10 +38,13 @@ test_color = "b"
 ### Please name it reg, so that the plotting code below picks it up and 
 ### plots it correctly. Don't forget to change the test_color above from "b" to
 ### "r" to differentiate training points from test points.
-
-
-
-
+from sklearn.linear_model import LinearRegression
+reg = LinearRegression()
+reg.fit(feature_train, target_train)
+print "Reg.coef: %s" % reg.coef_
+print "intercept_: %s" % reg.intercept_
+print "Score of regression on training data: %s" % reg.score(feature_train, target_train)
+print "Score of regression on testing data: %s" % reg.score(feature_test, target_test)
 
 
 
@@ -64,6 +68,12 @@ try:
     plt.plot( feature_test, reg.predict(feature_test) )
 except NameError:
     pass
+reg.fit(feature_test, target_test)
+print "Fitting regressor using testing data and testing on training data: "
+print "New slope: %s" % reg.coef_ 
+print "Score of regression on \"training\" data': %s" % reg.score(feature_train, target_train)
+print "Score of regression on \"testing\" data: %s" % reg.score(feature_test, target_test)
+plt.plot(feature_train, reg.predict(feature_train), color="b") 
 plt.xlabel(features_list[1])
 plt.ylabel(features_list[0])
 plt.legend()

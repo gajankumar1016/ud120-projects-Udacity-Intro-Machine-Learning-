@@ -36,8 +36,31 @@ features_train = features_train[:150].toarray()
 labels_train   = labels_train[:150]
 
 
-
 ### your code goes here
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+clf = DecisionTreeClassifier()
+clf.fit(features_train, labels_train)
+y_pred = clf.predict(features_test)
+print "Accuracy on testing data: %f" % accuracy_score(y_pred, labels_test)
+
+feature_importances = clf.feature_importances_
+feature_names = vectorizer.get_feature_names()
+# max_feature = max(enumerate(feature_importances), key=lambda (i, x): x)
+# print max_feature
+# print "Word causing most discrimination in DT: %s" % feature_names[max_feature[0]]
+
+important_features = filter(lambda (i, x): x > 0.2, enumerate(feature_importances))
+print "Important features: %s" % important_features
+
+important_words = []
+for idx, word in enumerate(feature_names):
+	for feature in important_features:
+		if idx == feature[0]:
+			important_words.append(word)
+
+print "Important words: %s" % important_words
+
 
 
 
